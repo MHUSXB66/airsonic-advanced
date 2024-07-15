@@ -1,0 +1,24 @@
+services:
+  airsonic-advanced:
+    image: lscr.io/linuxserver/airsonic-advanced:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.airsonic.entrypoints=http"
+      - "traefik.http.routers.airsonic.rule=Host(`airsonic.bloodreaver.fr`)"
+      - "traefik.http.services.airsonic.loadbalancer.server.port=80"
+    environment:
+      - TZ=Europe/Paris
+      - JAVA_OPTS=-Dserver.use-forward-headers=true
+    volumes:
+      - /srv/dev-disk-by-uuid-485c8266-0849-4fb7-992f-3c143e4bfb73/containers/airsonic2:/config
+      - /srv/dev-disk-by-uuid-485c8266-0849-4fb7-992f-3c143e4bfb73/Music:/music
+      - /srv/dev-disk-by-uuid-485c8266-0849-4fb7-992f-3c143e4bfb73/Music/playlists:/var/playlists
+      - /srv/dev-disk-by-uuid-485c8266-0849-4fb7-992f-3c143e4bfb73/Music/podcasts:/var/podcasts
+      - /srv/dev-disk-by-uuid-485c8266-0849-4fb7-992f-3c143e4bfb73/Music/airsonic2:/var/airsonic
+    ports:
+      - 4040:4040
+    networks:
+      - front-net
+networks: 
+  front-net:
+    external: true
